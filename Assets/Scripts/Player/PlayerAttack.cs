@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public float attackDamage = 25f;
-    public float attackSpeed = 1.0f;
+    public float attackDamage;
+    public float attackSpeed;
 
     public bool isAttacking = false;
     private InputManager inputManager;
@@ -13,6 +11,8 @@ public class PlayerAttack : MonoBehaviour
     private AttackCollider attackCollider;
     private AnimationEventHandler eventHandler;
     private Player player;
+    private Weapon weapon;
+    private Attackable attackable;
 
     private void Awake()
     {
@@ -21,6 +21,10 @@ public class PlayerAttack : MonoBehaviour
         attackCollider = GetComponentInChildren<AttackCollider>();
         eventHandler = GetComponentInChildren<AnimationEventHandler>();
         player = GetComponent<Player>();    
+        weapon = GetComponentInChildren<Weapon>();
+        attackDamage = player.damageMult * weapon.damage;
+        attackSpeed = player.attackSpeedMult * weapon.attackSpeed;
+        attackable = GetComponent<Attackable>();
     }
 
     private void OnEnable()
@@ -38,20 +42,23 @@ public class PlayerAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animator.speed = attackSpeed * player.attackSpeedMult;
+        animator.speed = attackSpeed;
 
-        if (
-            animator.GetCurrentAnimatorStateInfo(0).IsName("Hurt") ||
-            animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+        if (!attackable.isState(Attackable.State.None))
         {
             isAttacking = false;
             return;
         }
         if (!isAttacking && inputManager.onFoot.Attack.triggered)
         {
-            isAttacking = true;
-            animator.SetTrigger("Attack");
+            StartAttack();
         }
+    }
+
+    private void StartAttack()
+    {
+        isAttacking = true;
+        animator.SetTrigger("Attack");
     }
 
     private void ExitAttack()
@@ -61,14 +68,10 @@ public class PlayerAttack : MonoBehaviour
 
     private void DealDamage()
     {
-        attackCollider.enemies = attackCollider.enemies.Where(e => e != null && e.enabled).ToArray();
-        foreach (Collider enemy in attackCollider.enemies)
+        foreach (var collider in attackCollider.collisions.FindAll(c => c.tag == "Enemy")) 
         {
-            if (attackCollider.enemies.Any(e => e.GetHashCode() == enemy.GetHashCode()))
-            {
-                enemy.gameObject.TryGetComponent(out Attackable attackable);
-                attackable.TakeDamage(attackDamage * player.damageMult);
-            }
+            var attackable = collider.gameObject.GetComponent<Attackable>();
+            attackable?.TakeDamage(attackDamage);
         }
     }
 }

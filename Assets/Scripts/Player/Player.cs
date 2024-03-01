@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -13,11 +11,6 @@ public class Player : MonoBehaviour
     public int xp = 0;
     public int level = 1;
 
-    private void Awake()
-    {
-        Time.timeScale = 1.0f;
-    }
-
     public void GainXP(int xp)
     {
         this.xp += xp;
@@ -29,7 +22,6 @@ public class Player : MonoBehaviour
 
     public void GainLevel()
     {
-        // level = Mathf.FloorToInt((level * maxXp + xp) / (float)maxXp);
         level++;
         xp -= maxXp;
         maxXp += 50;

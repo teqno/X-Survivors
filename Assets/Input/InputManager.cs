@@ -31,7 +31,8 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-       motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>()); 
+        motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
+        motor.ProcessMouse();
     }
 
     private void OnEnable()
