@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -9,9 +10,9 @@ public class EnemyAI : MonoBehaviour
     private VisionCollider visionCollider;
     private SpriteRenderer sprite;
     private Attackable selfAttackable;
-    private AttackCollider attackCollider;
+    private MultiCollider attackCollider;
     private AnimationEventHandler eventHandler;
-    private Weapon weapon;
+    private Weapon[] weapons;
 
     // Start is called before the first frame update
     void Awake()
@@ -20,21 +21,21 @@ public class EnemyAI : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         selfAttackable = GetComponent<Attackable>();
-        attackCollider = GetComponentInChildren<AttackCollider>();
+        attackCollider = GetComponentInChildren<MultiCollider>();
         eventHandler = GetComponentInChildren<AnimationEventHandler>();
-        weapon = GetComponentInChildren<Weapon>();
+        weapons = GetComponentsInChildren<Weapon>();
     }
 
     private void OnEnable()
     {
         eventHandler.OnEnemyAttackFinish += ExitAttack;
-        eventHandler.OnEnemyAttackDamage += DealDamage;
+        eventHandler.OnEnemyAttackDamage += HandleExecuteAttack;
     }
 
     private void OnDisable()
     {
         eventHandler.OnEnemyAttackFinish -= ExitAttack;
-        eventHandler.OnEnemyAttackDamage -= DealDamage;
+        eventHandler.OnEnemyAttackDamage -= HandleExecuteAttack;
     }
 
     // Update is called once per frame
@@ -52,9 +53,8 @@ public class EnemyAI : MonoBehaviour
         }
         if (visionCollider.player != null)
         {
-            Debug.Log("inside ;" + isAttacking);
             Vector3 distance = visionCollider.player.transform.position - gameObject.transform.position;
-            if (distance.magnitude < 1f)
+            if (distance.magnitude < 0.5f)
             {
                 animator.SetInteger("AnimState", 0);
                 return;
@@ -71,8 +71,11 @@ public class EnemyAI : MonoBehaviour
             {
                 sprite.flipX = !sprite.flipX;
             }
-            Vector2 lookDirection = new Vector2(visionCollider.player.transform.position.x, visionCollider.player.transform.position.z);
-            attackCollider.transform.right = attackCollider.transform.position - new Vector3(lookDirection.x, 0, lookDirection.y);
+           
+            foreach (var weapon in weapons.Where(w => w.type == Weapon.WeaponType.Directional))
+            {
+                WeaponSystem.UpdateDirection(weapon, gameObject, visionCollider.player.transform.position);
+            } 
 
             if (!isAttacking && attackCollider.collisions.Exists(e => e.tag == "Player"))
             {
@@ -97,12 +100,11 @@ public class EnemyAI : MonoBehaviour
         isAttacking = false;
     }
 
-    private void DealDamage()
+    private void HandleExecuteAttack()
     {
-        foreach (Collider collider in attackCollider.collisions.FindAll(e => e.tag == "Player"))
+        foreach (var weapon in weapons)
         {
-            var attackable = collider.gameObject.GetComponent<Attackable>();
-            attackable?.TakeDamage(weapon.damage);
+            WeaponSystem.ExecuteAttack(weapon, gameObject, "Player");
         }
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1827809818375797491}
   - component: {fileID: 5517375849982568872}
   m_Layer: 0
-  m_Name: AttackCollider
+  m_Name: MultiCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,9 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8d1dd9ac976cbd44a00762374fadd1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isColliding: 0
-  enemies: []
-  playerInput: {fileID: 0}
 --- !u!1 &5153688462359958984
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,5 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365e5604a76b1d1409aa36583d5f3ce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   damage: 100
   attackSpeed: 1
+  projectile: {fileID: 0}

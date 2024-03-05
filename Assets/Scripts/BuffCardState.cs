@@ -17,5 +17,6 @@ public class BuffCardState : MonoBehaviour
     public void Select()
     {
         isSelected = true;
+        transform.parent.gameObject.SetActive(false);
     }
 }

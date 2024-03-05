@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackCollider : MonoBehaviour
+public class MultiCollider : MonoBehaviour
 {
     private List<Collider> _collisions = new List<Collider>();
     public List<Collider> collisions { get { return GetNonNullCollisions(); } }

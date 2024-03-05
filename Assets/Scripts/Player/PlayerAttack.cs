@@ -1,48 +1,68 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.SearchService;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public float attackDamage;
-    public float attackSpeed;
+    // public float attackDamage;
+    // public float attackSpeed;
+    public float attackAnimationSpeed;
 
     public bool isAttacking = false;
     private InputManager inputManager;
     private Animator animator;
-    private AttackCollider attackCollider;
+    private MultiCollider attackCollider;
     private AnimationEventHandler eventHandler;
     private Player player;
-    private Weapon weapon;
+    private Weapon[] weapons;
     private Attackable attackable;
+    private Dictionary<int, float> weaponCooldown;
 
     private void Awake()
     {
         inputManager = GetComponent<InputManager>();
         animator = GetComponentInChildren<Animator>();
-        attackCollider = GetComponentInChildren<AttackCollider>();
+        attackCollider = GetComponentInChildren<MultiCollider>();
         eventHandler = GetComponentInChildren<AnimationEventHandler>();
         player = GetComponent<Player>();    
-        weapon = GetComponentInChildren<Weapon>();
-        attackDamage = player.damageMult * weapon.damage;
-        attackSpeed = player.attackSpeedMult * weapon.attackSpeed;
+        weapons = GetComponentsInChildren<Weapon>();
+        weaponCooldown = weapons.ToDictionary(item => item.GetHashCode(), item => item.cooldown);
+        // attackDamage = player.damageMult * weapon.damage;
+        // attackSpeed = player.attackSpeedMult * weapon.attackSpeed;
         attackable = GetComponent<Attackable>();
+        attackAnimationSpeed = weapons.First().attackSpeed;
     }
 
     private void OnEnable()
     {
         eventHandler.OnPlayerAttackFinish += ExitAttack;
-        eventHandler.OnPlayerAttackDamage += DealDamage;
+        eventHandler.OnPlayerAttackDamage += HandleExecuteAttack;
     }
 
     private void OnDisable()
     {
         eventHandler.OnPlayerAttackFinish -= ExitAttack;
-        eventHandler.OnPlayerAttackDamage -= DealDamage;
+        eventHandler.OnPlayerAttackDamage -= HandleExecuteAttack;
     }
 
     // Update is called once per frame
     void Update()
     {
-        animator.speed = attackSpeed;
+        animator.speed = attackAnimationSpeed;
+
+        // Auto-attack
+        foreach (var weapon in weapons.Where(w => w.triggerType == Weapon.WeaponTriggerType.Auto))
+        {
+            if (weaponCooldown[weapon.GetHashCode()] <= 0)
+            {
+                weaponCooldown[weapon.GetHashCode()] = weapon.cooldown;
+                WeaponSystem.ExecuteAttack(weapon, gameObject);
+            } else
+            {
+                weaponCooldown[weapon.GetHashCode()] -= Time.deltaTime;
+            }
+        }
 
         if (!attackable.isState(Attackable.State.None))
         {
@@ -66,12 +86,11 @@ public class PlayerAttack : MonoBehaviour
         isAttacking = false;
     }
 
-    private void DealDamage()
+    private void HandleExecuteAttack()
     {
-        foreach (var collider in attackCollider.collisions.FindAll(c => c.tag == "Enemy")) 
+        foreach (var weapon in weapons.Where(w => w.triggerType == Weapon.WeaponTriggerType.Manual))
         {
-            var attackable = collider.gameObject.GetComponent<Attackable>();
-            attackable?.TakeDamage(attackDamage);
+            WeaponSystem.ExecuteAttack(weapon, gameObject);
         }
     }
 }

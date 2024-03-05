@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class PlayerMotor : MonoBehaviour
     private SpriteRenderer sprite;
     private Attackable selfAttackble;
     private PlayerAttack selfPlayerAttack;
-    private AttackCollider attackCollider;
+    private Weapon[] weapons;
 
     // Start is called before the first frame update
     void Start()
@@ -20,14 +19,15 @@ public class PlayerMotor : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
         selfAttackble = GetComponent<Attackable>();
         selfPlayerAttack = GetComponent<PlayerAttack>();
-        attackCollider = GetComponentInChildren<AttackCollider>();
+        weapons = GetComponentsInChildren<Weapon>();
     }
 
     public void ProcessMouse()
     {
-        Vector2 pointerPos = Mouse.current.position.value;
-        Vector2 lookDirection = pointerPos - new Vector2(Screen.width, Screen.height) * 0.5f;
-        attackCollider.transform.right = attackCollider.transform.position - new Vector3(lookDirection.x, 0, lookDirection.y);
+        foreach (var weapon in weapons)
+        {
+            WeaponSystem.UpdateDirection(weapon, player.gameObject);
+        }
     }
 
     // Receive input from InputManager and pass to CharacterController

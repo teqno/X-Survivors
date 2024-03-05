@@ -8,13 +8,6 @@ public class SpawnEnemies : MonoBehaviour
     private float timePassd = 0f;
     private float spawnMinDistance = 10f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (timePassd >= spawnRate)
