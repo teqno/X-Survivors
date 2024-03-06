@@ -42,6 +42,10 @@ public class EnemyAttackable : Attackable
 
     private void EnterDeath()
     {
+        if (gameObject.tag == "Enemy")
+        {
+            GameState.score += 1;
+        }
         animator.SetTrigger("Death");
         GetComponent<CapsuleCollider>().enabled = false;
         dropsLoot?.DropLoot();
