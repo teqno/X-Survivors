@@ -13,6 +13,8 @@ public class AnimationEventHandler : MonoBehaviour
 
     public event Action OnEnemyAttackDamage;
 
+    public event Action OnPlayerDeathFinish;
+
     private void PlayerAttackAnimationFinishedTrigger() => OnPlayerAttackFinish?.Invoke();
     
     private void EnemyAttackAnimationFinishedTrigger() => OnEnemyAttackFinish?.Invoke();
@@ -22,4 +24,6 @@ public class AnimationEventHandler : MonoBehaviour
     private void PlayerAttackDamageAnimationTrigger() => OnPlayerAttackDamage?.Invoke();
 
     private void EnemyAttackDamageAnimationTrigger() => OnEnemyAttackDamage?.Invoke();
+
+    private void PlayerDeathAnimationFinishedTrigger() => OnPlayerDeathFinish?.Invoke();
 }

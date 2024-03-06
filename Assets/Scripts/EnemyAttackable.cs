@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class EnemyAttackable : Attackable
@@ -6,24 +7,32 @@ public class EnemyAttackable : Attackable
     private AnimationEventHandler eventHandler;
     private Animator animator;
     private DropsLoot dropsLoot;
+    private GameObject gameOverUI;
 
     private void Awake()
     {
         eventHandler = GetComponentInChildren<AnimationEventHandler>();
         animator = GetComponentInChildren<Animator>();
         dropsLoot = GetComponent<DropsLoot>();
+        gameOverUI = Resources.FindObjectsOfTypeAll<GameObject>().First(e => e.name == "GameOverUI");
     }
 
     private void OnEnable()
     {
         eventHandler.OnHurtFinish += ExitHurt;
         OnDeath += EnterDeath;
+
+        if (gameObject.tag == "Player")
+        {
+            eventHandler.OnPlayerDeathFinish += ExitPlayerDeath;
+        }
     }
 
     private void OnDisable()
     {
         eventHandler.OnHurtFinish -= ExitHurt; 
         OnDeath -= EnterDeath;
+        eventHandler.OnPlayerDeathFinish -= ExitPlayerDeath;
     }
     
     public override void TakeDamage(float damageAmount)
@@ -45,10 +54,16 @@ public class EnemyAttackable : Attackable
         if (gameObject.tag == "Enemy")
         {
             GameState.score += 1;
+            GetComponent<CapsuleCollider>().enabled = false;
         }
+
         animator.SetTrigger("Death");
-        GetComponent<CapsuleCollider>().enabled = false;
         dropsLoot?.DropLoot();
         Destroy(gameObject, 5f);
+    }
+
+    private void ExitPlayerDeath()
+    {
+        gameOverUI.SetActive(true);
     }
 }
