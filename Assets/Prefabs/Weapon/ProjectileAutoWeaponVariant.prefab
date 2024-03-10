@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ProjectileAutoWeaponVariant
       objectReference: {fileID: 0}
+    - target: {fileID: 5517375849982568872, guid: 3a6ac979d24867e4ab2815a12d690378, type: 3}
+      propertyPath: tagFilter
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 6260187879839532286, guid: 3a6ac979d24867e4ab2815a12d690378, type: 3}
       propertyPath: type
       value: 1

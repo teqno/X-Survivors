@@ -338,9 +338,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 463516241466256481}
     m_Modifications:
+    - target: {fileID: 428769073832339422, guid: a20c888a3e7a6274ca7dccc1aa89c3cd, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1483506030272263912, guid: a20c888a3e7a6274ca7dccc1aa89c3cd, type: 3}
       propertyPath: m_Name
       value: MeleeWeaponVariant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2270452600765549192, guid: a20c888a3e7a6274ca7dccc1aa89c3cd, type: 3}
+      propertyPath: tagFilter
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2729787734272605711, guid: a20c888a3e7a6274ca7dccc1aa89c3cd, type: 3}
       propertyPath: m_LocalPosition.x

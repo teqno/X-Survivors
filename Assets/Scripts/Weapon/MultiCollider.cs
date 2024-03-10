@@ -3,12 +3,16 @@ using UnityEngine;
 
 public class MultiCollider : MonoBehaviour
 {
-    private List<Collider> _collisions = new List<Collider>();
+    public string tagFilter;
+    public List<Collider> _collisions = new List<Collider>();
     public List<Collider> collisions { get { return GetNonNullCollisions(); } }
 
     private void OnTriggerEnter(Collider other)
     {
-        _collisions.Add(other);
+        if (tagFilter == null || other.tag == tagFilter)
+        {
+            _collisions.Add(other);
+        }
     }
 
     private void OnTriggerExit(Collider other)

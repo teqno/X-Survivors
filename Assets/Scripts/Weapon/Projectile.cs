@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 1f;
-    public Vector3 direction = new();
+    public float speed = 10f;
+    public Vector3 direction;
     public float damage;
 
     private MultiCollider multiCollider;
@@ -20,18 +18,14 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, 5);
     }
 
-    private void FixedUpdate()
-    {
-        transform.Translate(direction * speed);
-    }
-
     void Update()
     {
-        foreach (Collider col in multiCollider.collisions)
+        transform.Translate(direction * speed * Time.deltaTime);
+        for (int i = 0; i < multiCollider._collisions.Count; i++)
         {
-            if (col.tag == "Enemy")
+            if (multiCollider._collisions[i] != null)
             {
-                var attackable = col.gameObject.GetComponent<Attackable>();
+                var attackable = multiCollider._collisions[i].gameObject.GetComponent<Attackable>();
                 attackable?.TakeDamage(damage);
                 Destroy(gameObject);
             }

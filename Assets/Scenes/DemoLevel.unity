@@ -1370,6 +1370,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 7175793543011403744, guid: 7fbbcf89cd033cb4ca109717b9a6e4bc, type: 3}
+      propertyPath: tagFilter
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8783292070878096054, guid: 7fbbcf89cd033cb4ca109717b9a6e4bc, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1476394784307039219, guid: 7fbbcf89cd033cb4ca109717b9a6e4bc, type: 3}
@@ -3932,6 +3940,18 @@ PrefabInstance:
     - target: {fileID: 3886126516912453807, guid: 7927f8f30e45a2b4780fb0284e1d767a, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4469885688940022764, guid: 7927f8f30e45a2b4780fb0284e1d767a, type: 3}
+      propertyPath: attackSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4469885688940022764, guid: 7927f8f30e45a2b4780fb0284e1d767a, type: 3}
+      propertyPath: direction.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4469885688940022764, guid: 7927f8f30e45a2b4780fb0284e1d767a, type: 3}
+      propertyPath: numOfProjectiles
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4546609521264644837, guid: 7927f8f30e45a2b4780fb0284e1d767a, type: 3}
       propertyPath: m_Name

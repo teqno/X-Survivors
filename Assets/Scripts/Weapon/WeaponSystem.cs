@@ -29,13 +29,6 @@ public class WeaponSystem : MonoBehaviour
                     Debug.DrawRay(attackingEntity.transform.position, weapon.direction, Color.red);
                 }
                 break;
-            case Weapon.WeaponType.Radial:
-                {
-                    // Point collider / projectile
-                    
-                    
-                }
-                break;
         }
 
         MultiCollider collider = weapon.transform.GetComponentInChildren<MultiCollider>();
@@ -60,7 +53,7 @@ public class WeaponSystem : MonoBehaviour
                 
                 if (weapon.type == Weapon.WeaponType.Radial)
                 {
-                    projectile.direction = Quaternion.Euler(0, 360 / weapon.numOfProjectiles * i, 0) * projectile.direction;
+                    projectile.direction = Quaternion.Euler(0, 360f / weapon.numOfProjectiles * i, 0) * projectile.direction;
                 }
             }
         }
